@@ -36,12 +36,6 @@ export class ContactService {
     return this.http.post<ApiResponse>(this.API, contact, { headers });
   }
 
-  updateContact(id: string, contact: any) {
-    const headers = this.getAuthHeaders();
-
-    return this.http.put(`${this.API}/${id}`, contact, { headers });
-  }
-
   deleteContact(id: string) {
     const headers = this.getAuthHeaders();
 
