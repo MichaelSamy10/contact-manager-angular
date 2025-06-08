@@ -33,6 +33,7 @@ export class ContactList implements OnInit {
   page = 1;
   filters!: FormGroup;
   totalPages = 1;
+
   constructor(
     private contactService: ContactService,
     private fb: FormBuilder,

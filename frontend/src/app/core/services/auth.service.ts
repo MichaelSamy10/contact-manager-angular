@@ -37,11 +37,4 @@ export class AuthService {
   isLoggedIn(): boolean {
     return !!this.getToken();
   }
-
-  getUserRole(): string {
-    const token = this.getToken();
-    if (!token) return '';
-    const decoded: any = jwtDecode(token);
-    return decoded?.role || '';
-  }
 }

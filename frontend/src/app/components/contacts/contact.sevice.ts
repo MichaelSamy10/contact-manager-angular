@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { AuthService } from '../../core/services/auth.service';
 import { ApiResponse } from '../../shared/models/auth';
 
 @Injectable({ providedIn: 'root' })
