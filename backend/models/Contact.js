@@ -49,21 +49,4 @@ const ContactSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// // Index for better search performance
-// ContactSchema.index({ name: 'text', phone: 'text', address: 'text' });
-// ContactSchema.index({ createdBy: 1 });
-// ContactSchema.index({ isLocked: 1 });
-
-// // Populate user information when retrieving contacts
-// ContactSchema.pre(/^find/, function(next) {
-//   this.populate({
-//     path: 'createdBy',
-//     select: 'username'
-//   }).populate({
-//     path: 'lockedBy',
-//     select: 'username'
-//   });
-//   next();
-// });
-
 module.exports = mongoose.model("Contact", ContactSchema);

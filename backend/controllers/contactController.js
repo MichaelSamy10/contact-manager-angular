@@ -13,7 +13,6 @@ const getContacts = async (req, res) => {
 
     let query = {};
 
-    // search query
     if (search) {
       query = {
         $or: [
@@ -23,11 +22,9 @@ const getContacts = async (req, res) => {
         ],
       };
     }
-    // sort query
+
     const sort = {};
     sort[sortBy] = sortOrder === "asc" ? 1 : -1;
-
-    // Execute query with pagination
 
     const Contacts = await Contact.find(query)
       .sort(sort)
@@ -36,7 +33,6 @@ const getContacts = async (req, res) => {
       .populate("createdBy", "username")
       .populate("lockedBy", "username");
 
-    // total count of pagination
     const total = await Contact.countDocuments(query);
     const totalPages = Math.ceil(total / limit);
 
@@ -109,9 +105,6 @@ const createContact = async (req, res) => {
       .populate("createdBy", "username")
       .populate("lockedBy", "username");
 
-    // Emit real-time update
-    // req.io.emit("contact-created", populatedContact);
-
     res.status(201).json({
       success: true,
       message: "Contact created successfully",
@@ -137,14 +130,6 @@ const updateContact = async (req, res) => {
       return res.status(404).json({
         success: false,
         message: "Contact not found",
-      });
-    }
-
-    // Check if contact is locked by another user
-    if (contact.isLocked && contact.lockedBy.toString() !== req.user.id) {
-      return res.status(423).json({
-        success: false,
-        message: "Contact is currently being edited by another user",
       });
     }
 
@@ -177,7 +162,7 @@ const updateContact = async (req, res) => {
         .populate("lockedBy", "username");
 
       // Emit real-time update
-      req.io.emit("contact-updated", contact);
+      // req.io.emit("contact-updated", contact);
 
       res.json({
         success: true,

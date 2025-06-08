@@ -30,15 +30,17 @@ export class ContactList implements OnInit {
   errorMessage = '';
   page = 1;
   filters!: FormGroup;
+  totalPages = 1;
   constructor(
     private contactService: ContactService,
     private fb: FormBuilder,
     private cd: ChangeDetectorRef
   ) {
     this.filters = this.fb.group({
-      name: ['', Validators.required],
+      name: ['', Validators.required, Validators.minLength(2)],
       phone: ['', Validators.required],
-      address: ['', Validators.required],
+      address: ['', Validators.required, Validators.minLength(5)],
+      notes: [''],
     });
   }
 
@@ -49,6 +51,8 @@ export class ContactList implements OnInit {
     const f = this.filters.value;
     this.contactService.getContacts(this.page, f).subscribe((res: any) => {
       this.contacts.data = res.data.Contacts;
+      this.totalPages = res.data.pagination.pages;
+
       this.cd.detectChanges();
     });
   }
@@ -57,6 +61,7 @@ export class ContactList implements OnInit {
     const name = this.filters.get('name')?.value;
     const phone = this.filters.get('phone')?.value;
     const address = this.filters.get('address')?.value;
+    const notes = this.filters.get('notes')?.value;
 
     if (this.filters.invalid) {
       this.errorMessage = 'Please fill in all fields before adding a contact.';
@@ -69,23 +74,27 @@ export class ContactList implements OnInit {
         name,
         phone,
         address,
+        notes,
       })
       .subscribe({
         next: (res) => {
           console.log('Contact created:', res);
           this.successMessage = res.message!;
           alert(this.successMessage);
+          this.filters.reset();
           this.loadContacts();
         },
         error: (err) => {
           console.error('Error creating contact:', err);
           this.errorMessage = err.error?.message!;
+          this.filters.reset();
+          alert(this.errorMessage);
         },
       });
   }
 
   delete(id: string) {
-    if (!confirm('Are you sure?')) return;
+    if (!confirm('Are you sure to delete contact?')) return;
     this.contactService.deleteContact(id).subscribe({
       next: (res) => {
         console.log('Contact deleted:', res);
@@ -95,5 +104,23 @@ export class ContactList implements OnInit {
         console.error('Error deleting contact:', err);
       },
     });
+  }
+
+  onFilterSubmit() {
+    this.page = 1;
+    this.loadContacts();
+  }
+
+  prevPage() {
+    if (this.page > 1) {
+      this.page--;
+      this.loadContacts();
+      console.log(this.page);
+    }
+  }
+  nextPage() {
+    this.page++;
+    this.loadContacts();
+    console.log(this.page);
   }
 }

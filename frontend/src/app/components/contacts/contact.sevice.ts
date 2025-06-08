@@ -16,10 +16,18 @@ export class ContactService {
     });
   }
 
-  getContacts(page: number, filters = {}) {
+  getContacts(page: number, filters: any, limit: number = 5) {
     const headers = this.getAuthHeaders();
+    const search = filters.name || filters.phone || filters.address || '';
 
-    return this.http.get(`${this.API}`, { headers });
+    return this.http.get(`${this.API}`, {
+      params: {
+        page: page.toString(),
+        limit: limit.toString(),
+        search,
+      },
+      headers,
+    });
   }
 
   addContact(contact: any) {
