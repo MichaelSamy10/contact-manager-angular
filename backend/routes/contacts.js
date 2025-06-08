@@ -26,8 +26,4 @@ router.get("/:id", idValidation, getContact);
 
 router.delete("/:id", idValidation, deleteContact);
 
-router.post("/:id/lock", idValidation, lockContact);
-
-router.post("/:id/unlock", idValidation, unlockContact);
-
 module.exports = router;
