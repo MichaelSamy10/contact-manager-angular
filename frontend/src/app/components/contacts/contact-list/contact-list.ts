@@ -11,6 +11,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Contact } from '../../../shared/models/auth';
+import { AuthService } from '../../../core/services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-contact-list',
@@ -34,7 +36,9 @@ export class ContactList implements OnInit {
   constructor(
     private contactService: ContactService,
     private fb: FormBuilder,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private auth: AuthService,
+    private router: Router
   ) {
     this.filters = this.fb.group({
       name: ['', Validators.required, Validators.minLength(2)],
@@ -122,5 +126,10 @@ export class ContactList implements OnInit {
     this.page++;
     this.loadContacts();
     console.log(this.page);
+  }
+
+  logout() {
+    this.auth.logout();
+    this.router.navigate(['/login']);
   }
 }
