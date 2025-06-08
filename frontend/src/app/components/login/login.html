@@ -1,6 +1,5 @@
-<form [formGroup]="form" (ngSubmit)="login()">
+<form [formGroup]="form" (ngSubmit)="login()" class="container w-50">
   <mat-card>
-    <mat-card-title>Login</mat-card-title>
     <mat-form-field appearance="fill">
       <mat-label>Username</mat-label>
       <input matInput formControlName="username" />
@@ -9,6 +8,6 @@
       <mat-label>Password</mat-label>
       <input matInput type="password" formControlName="password" />
     </mat-form-field>
-    <button mat-raised-button color="primary">Login</button>
+    <button mat-raised-button class="btn btn-success">Login</button>
   </mat-card>
 </form>
