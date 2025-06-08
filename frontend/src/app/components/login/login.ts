@@ -26,14 +26,13 @@ export class Login {
     private router: Router
   ) {
     this.form = this.fb.group({
-      username: [''],
-      password: [''],
+      username: ['', Validators.required],
+      password: ['', Validators.required],
     });
   }
 
   login() {
     if (this.form.invalid) return;
-    console.log(this.auth.getToken());
     this.auth.login(this.form.value).subscribe({
       next: (res: any) => {
         this.auth.saveToken(res.data.token);
