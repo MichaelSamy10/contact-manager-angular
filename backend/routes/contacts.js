@@ -3,7 +3,6 @@ const {
   getContacts,
   getContact,
   createContact,
-  updateContact,
   deleteContact,
   lockContact,
   unlockContact,
@@ -24,8 +23,6 @@ router.get("/", contactQueryValidation, getContacts);
 router.post("/", contactValidation, createContact);
 
 router.get("/:id", idValidation, getContact);
-
-router.put("/:id", idValidation, contactValidation, updateContact);
 
 router.delete("/:id", idValidation, deleteContact);
 

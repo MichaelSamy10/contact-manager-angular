@@ -3,16 +3,13 @@ const http = require("http");
 const socketIo = require("socket.io");
 const cors = require("cors");
 const helmet = require("helmet");
-const rateLimit = require("express-rate-limit");
 const dotenv = require("dotenv");
-
-dotenv.config();
 
 const connectDB = require("./config/database");
 const authRoutes = require("./routes/auth");
 const contactRoutes = require("./routes/contacts");
-const erroHandler = require("./middleware/errorHandler");
-const { handleSocketConnection } = require("./config/socket");
+
+dotenv.config();
 
 const app = express();
 const server = http.createServer(app);
@@ -63,7 +60,7 @@ app.get("/api/health", (req, res) => {
 // app.use(errorHandler);
 
 // Socket.io connection handling
-handleSocketConnection(io);
+// handleSocketConnection(io);
 
 const PORT = process.env.PORT || 3000;
 

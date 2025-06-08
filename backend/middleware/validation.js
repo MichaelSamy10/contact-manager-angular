@@ -1,6 +1,5 @@
 const { body, query, validationResult } = require("express-validator");
 
-// Validation error handler
 const handleValidationErrors = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -13,7 +12,6 @@ const handleValidationErrors = (req, res, next) => {
   next();
 };
 
-// Contact validation rules
 const contactValidation = [
   body("name")
     .trim()
@@ -37,7 +35,6 @@ const contactValidation = [
   handleValidationErrors,
 ];
 
-// Login validation rules
 const loginValidation = [
   body("username")
     .trim()
@@ -51,7 +48,6 @@ const loginValidation = [
   handleValidationErrors,
 ];
 
-// Query validation for contact list
 const contactQueryValidation = [
   query("page")
     .optional()
@@ -84,7 +80,6 @@ const contactQueryValidation = [
   handleValidationErrors,
 ];
 
-// ID parameter validation
 const idValidation = [
   (req, res, next) => {
     const { id } = req.params;

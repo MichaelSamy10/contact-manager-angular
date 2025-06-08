@@ -119,66 +119,6 @@ const createContact = async (req, res) => {
   }
 };
 
-const updateContact = async (req, res) => {
-  try {
-    const { name, phone, address, notes } = req.body;
-    const contactId = req.params.id;
-
-    let contact = await Contact.findById(contactId);
-
-    if (!contact) {
-      return res.status(404).json({
-        success: false,
-        message: "Contact not found",
-      });
-    }
-
-    if (phone !== contact.phone) {
-      const existingContact = await Contact.findOne({
-        phone,
-        _id: { $ne: contactId },
-      });
-      if (existingContact) {
-        return res.status(400).json({
-          success: false,
-          message: "Contact with this phone number already exists",
-        });
-      }
-
-      contact = await Contact.findByIdAndUpdate(
-        contactId,
-        {
-          name,
-          phone,
-          address,
-          notes: notes || "",
-        },
-        {
-          new: true,
-          runValidators: true,
-        }
-      )
-        .populate("createdBy", "username")
-        .populate("lockedBy", "username");
-
-      // Emit real-time update
-      // req.io.emit("contact-updated", contact);
-
-      res.json({
-        success: true,
-        message: "Contact updated successfully",
-        data: { contact },
-      });
-    }
-  } catch (error) {
-    console.error("Update contact error:", error);
-    res.status(500).json({
-      success: false,
-      message: "Server error while updating contact",
-    });
-  }
-};
-
 const deleteContact = async (req, res) => {
   try {
     const contact = await Contact.findById(req.params.id);
@@ -188,18 +128,8 @@ const deleteContact = async (req, res) => {
         message: "Contact not found",
       });
     }
-    // Check if contact is locked by another user
-    if (contact.isLocked && contact.lockedBy.toString() !== req.user.id) {
-      return res.status(423).json({
-        success: false,
-        message: "Contact is currently being edited by another user",
-      });
-    }
 
     await Contact.findByIdAndDelete(req.params.id);
-
-    // Emit real-time update
-    // req.io.emit("contact-deleted", { contactId: req.params.id });
 
     res.json({
       success: true,
@@ -309,7 +239,6 @@ module.exports = {
   getContacts,
   getContact,
   createContact,
-  updateContact,
   deleteContact,
   lockContact,
   unlockContact,

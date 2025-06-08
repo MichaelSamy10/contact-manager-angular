@@ -46,28 +46,4 @@ const auth = async (req, res, next) => {
   }
 };
 
-// Optional auth middleware for routes that work with or without authentication
-const optionalAuth = async (req, res, next) => {
-  try {
-    const token = req.header("Authorization")?.replace("Bearer ", "");
-
-    if (token) {
-      const decoded = jwt.verify(
-        token,
-        process.env.JWT_SECRET || "your-secret-key"
-      );
-      const user = await User.findById(decoded.id).select("-password");
-
-      if (user && user.isActive) {
-        req.user = user;
-      }
-    }
-
-    next();
-  } catch (error) {
-    // Continue without authentication for optional auth
-    next();
-  }
-};
-
-module.exports = { auth, optionalAuth };
+module.exports = { auth };
