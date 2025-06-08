@@ -1,0 +1,72 @@
+const express = require("express");
+const http = require("http");
+const socketIo = require("socket.io");
+const cors = require("cors");
+const helmet = require("helmet");
+const rateLimit = require("express-rate-limit");
+const dotenv = require("dotenv");
+
+dotenv.config();
+
+const connectDB = require("./config/database");
+const authRoutes = require("./routes/auth");
+const contactRoutes = require("./routes/contacts");
+const erroHandler = require("./middleware/errorHandler");
+const { handleSocketConnection } = require("./config/socket");
+
+const app = express();
+const server = http.createServer(app);
+const io = socketIo(server, {
+  cors: {
+    origin: process.env.FRONTEND_URL || "http://localhost:4200",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+  },
+});
+
+connectDB();
+
+app.use(express.json());
+app.use(helmet());
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL || "http://localhost:4200",
+    credentials: true,
+  })
+);
+
+// // Rate limiting
+// const limiter = rateLimit({
+//   windowMs: 15 * 60 * 1000, // 15 minutes
+//   max: 100 // limit each IP to 100 requests per windowMs
+// });
+// app.use(limiter);
+
+// // Body parser middleware
+// app.use(express.json({ limit: '10mb' }));
+// app.use(express.urlencoded({ extended: true }));
+
+// // Make io accessible to routes
+// app.use((req, res, next) => {
+//   req.io = io;
+//   next();
+// });
+
+// Routes
+app.use("/api/auth", authRoutes);
+app.use("/api/contacts", contactRoutes);
+
+app.get("/api/health", (req, res) => {
+  res.json({ status: "OK", message: "Server is running" });
+});
+
+// // Error handling middleware
+// app.use(errorHandler);
+
+// Socket.io connection handling
+handleSocketConnection(io);
+
+const PORT = process.env.PORT || 3000;
+
+server.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
