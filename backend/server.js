@@ -31,23 +31,6 @@ app.use(
   })
 );
 
-// // Rate limiting
-// const limiter = rateLimit({
-//   windowMs: 15 * 60 * 1000, // 15 minutes
-//   max: 100 // limit each IP to 100 requests per windowMs
-// });
-// app.use(limiter);
-
-// // Body parser middleware
-// app.use(express.json({ limit: '10mb' }));
-// app.use(express.urlencoded({ extended: true }));
-
-// // Make io accessible to routes
-// app.use((req, res, next) => {
-//   req.io = io;
-//   next();
-// });
-
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/contacts", contactRoutes);
