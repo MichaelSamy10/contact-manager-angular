@@ -36,7 +36,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/contacts", contactRoutes);
 
 app.get("/api/health", (req, res) => {
-  res.json({ status: "OK", message: "Server is running" });
+  res.json({ status: "OK", message: "Server is running " });
 });
 
 // // Error handling middleware
