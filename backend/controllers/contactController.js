@@ -1,39 +1,23 @@
 const Contact = require("../models/Contact");
-const mongoose = require("mongoose");
 
 const getContacts = async (req, res) => {
   try {
     const {
       page = 1,
       limit = 5,
-      search = "",
       sortBy = "createdAt",
       sortOrder = "desc",
     } = req.query;
 
-    let query = {};
-
-    if (search) {
-      query = {
-        $or: [
-          { name: { $regex: search, $options: "i" } },
-          { phone: { $regex: search, $options: "i" } },
-          { address: { $regex: search, $options: "i" } },
-        ],
-      };
-    }
-
     const sort = {};
     sort[sortBy] = sortOrder === "asc" ? 1 : -1;
 
-    const Contacts = await Contact.find(query)
+    const Contacts = await Contact.find({})
       .sort(sort)
       .limit(limit * 1)
-      .skip((page - 1) * limit)
-      .populate("createdBy", "username")
-      .populate("lockedBy", "username");
+      .skip((page - 1) * limit);
 
-    const total = await Contact.countDocuments(query);
+    const total = await Contact.countDocuments({});
     const totalPages = Math.ceil(total / limit);
 
     res.json({
@@ -57,30 +41,30 @@ const getContacts = async (req, res) => {
   }
 };
 
-const getContact = async (req, res) => {
-  try {
-    const contact = await Contact.findById(req.params.id)
-      .populate("createdBy", "username")
-      .populate("lockedBy", "username");
-    if (!contact) {
-      return res.status(404).json({
-        success: false,
-        message: "Contact not found",
-      });
-    }
+// const getContact = async (req, res) => {
+//   try {
+//     const contact = await Contact.findById(req.params.id)
+//       .populate("createdBy", "username")
+//       .populate("lockedBy", "username");
+//     if (!contact) {
+//       return res.status(404).json({
+//         success: false,
+//         message: "Contact not found",
+//       });
+//     }
 
-    res.json({
-      success: true,
-      data: { contact },
-    });
-  } catch (error) {
-    console.error("Get contact error:", error);
-    res.status(500).json({
-      success: false,
-      message: "Server error while fetching contact",
-    });
-  }
-};
+//     res.json({
+//       success: true,
+//       data: { contact },
+//     });
+//   } catch (error) {
+//     console.error("Get contact error:", error);
+//     res.status(500).json({
+//       success: false,
+//       message: "Server error while fetching contact",
+//     });
+//   }
+// };
 
 const createContact = async (req, res) => {
   try {
@@ -99,11 +83,8 @@ const createContact = async (req, res) => {
       phone,
       address,
       notes: notes || "",
-      createdBy: req.user.id,
     });
-    const populatedContact = await Contact.findById(contact._id)
-      .populate("createdBy", "username")
-      .populate("lockedBy", "username");
+    const populatedContact = await Contact.findById(contact._id);
 
     res.status(201).json({
       success: true,
@@ -144,9 +125,28 @@ const deleteContact = async (req, res) => {
   }
 };
 
+const updateContact = async (req, res) => {
+  try {
+    const updated = await Contact.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
+
+    if (!updated) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Contact not found" });
+    }
+    res.json({ success: true, message: "Contact updated", data: updated });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
 module.exports = {
   getContacts,
-  getContact,
+  // getContact,
   createContact,
   deleteContact,
+  updateContact,
 };

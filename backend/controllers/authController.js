@@ -30,13 +30,12 @@ const login = async (req, res) => {
         user = new User({
           username: hardcodedUser.username,
           password: hardcodedUser.password,
-          role: "user",
         });
         await user.save();
       }
     }
 
-    if (!user || !user.isActive) {
+    if (!user) {
       return res
         .status(401)
         .json({ success: false, message: "Invalid Credentials" });
@@ -60,7 +59,6 @@ const login = async (req, res) => {
         user: {
           id: user._id,
           username: user.username,
-          role: user.role,
         },
       },
     });

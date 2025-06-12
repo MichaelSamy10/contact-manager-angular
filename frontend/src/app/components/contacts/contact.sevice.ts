@@ -40,4 +40,10 @@ export class ContactService {
 
     return this.http.delete(`${this.API}/${id}`, { headers });
   }
+
+  updateContact(id: string, updatedContact: any) {
+    const headers = this.getAuthHeaders();
+
+    return this.http.put(`${this.API}/${id}`, updatedContact, { headers });
+  }
 }

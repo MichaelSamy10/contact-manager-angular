@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { jwtDecode } from 'jwt-decode';
+import { LoginCredentials } from '../../shared/models/auth';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +11,7 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
-  login(credentials: any) {
+  login(credentials: LoginCredentials) {
     return this.http.post<{ token: string }>(`${this.API}/login`, credentials);
   }
 

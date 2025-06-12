@@ -39,12 +39,6 @@ app.get("/api/health", (req, res) => {
   res.json({ status: "OK", message: "Server is running " });
 });
 
-// // Error handling middleware
-// app.use(errorHandler);
-
-// Socket.io connection handling
-// handleSocketConnection(io);
-
 const PORT = process.env.PORT || 3000;
 
 server.listen(PORT, () => {

@@ -1,3 +1,8 @@
+export interface LoginCredentials {
+  username: string;
+  password: string;
+}
+
 // Contact interface
 export interface Contact {
   _id?: string;
@@ -5,18 +10,6 @@ export interface Contact {
   phone: string;
   address: string;
   notes?: string;
-  createdBy?: {
-    _id: string;
-    username: string;
-  };
-  isLocked?: boolean;
-  lockedBy?: {
-    _id: string;
-    username: string;
-  };
-  lockedAt?: string;
-  createdAt?: string;
-  updatedAt?: string;
 }
 
 // API Response interfaces

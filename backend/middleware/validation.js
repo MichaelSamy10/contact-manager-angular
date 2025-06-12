@@ -20,7 +20,8 @@ const contactValidation = [
     .matches(/^[a-zA-Z\s]+$/)
     .withMessage("Name should only contain letters and spaces"),
 
-  body("phone").trim(),
+  body("phone").trim().isNumeric().withMessage("Phone must be a number"),
+
   body("address")
     .trim()
     .isLength({ min: 5, max: 500 })
@@ -60,12 +61,6 @@ const contactQueryValidation = [
     .isInt({ min: 1, max: 100 })
     .withMessage("Limit must be between 1 and 100")
     .toInt(),
-
-  query("search")
-    .optional()
-    .trim()
-    .isLength({ max: 100 })
-    .withMessage("Search term cannot exceed 100 characters"),
 
   query("sortBy")
     .optional()

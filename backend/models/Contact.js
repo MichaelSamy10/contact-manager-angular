@@ -27,24 +27,6 @@ const ContactSchema = new mongoose.Schema(
       maxlength: [1000, "Notes cannot exceed 1000 characters"],
       default: "",
     },
-    createdBy: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
-    isLocked: {
-      type: Boolean,
-      default: false,
-    },
-    lockedBy: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      default: null,
-    },
-    lockedAt: {
-      type: Date,
-      default: null,
-    },
   },
   { timestamps: true }
 );
